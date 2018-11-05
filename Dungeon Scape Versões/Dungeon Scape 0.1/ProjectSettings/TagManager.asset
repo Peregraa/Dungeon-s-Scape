@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Espeto
   - checkpoint
+  - Inimigo
+  - Bloco
   layers:
   - Default
   - TransparentFX

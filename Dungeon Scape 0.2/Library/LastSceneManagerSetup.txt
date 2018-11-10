@@ -1,0 +1,4 @@
+sceneSetups:
+- path: "Assets/Sprit/Cen\xE1rio/TesteCen\xE1rio.unity"
+  isLoaded: 1
+  isActive: 1

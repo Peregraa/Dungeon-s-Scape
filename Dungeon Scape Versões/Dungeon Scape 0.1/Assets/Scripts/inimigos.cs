@@ -62,6 +62,10 @@ public class inimigos : MonoBehaviour
         {
             colidde = true;
         }
+        if (col.gameObject.CompareTag("Player"))
+        {
+            colidde = true;
+        }
     }
 
     void OnCollisionExit2D(Collision2D col)
@@ -71,6 +75,10 @@ public class inimigos : MonoBehaviour
             colidde = false;
         }
         if (col.gameObject.CompareTag("Bloco"))
+        {
+            colidde = false;
+        }
+        if (col.gameObject.CompareTag("Player"))
         {
             colidde = false;
         }

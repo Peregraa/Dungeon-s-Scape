@@ -323,21 +323,21 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Cenario/inimigos/passaro
+    - Assets/Scripts
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Cenario/inimigos/passaro
+  - Assets/Scripts
   m_LastFoldersGridSize: -1
   m_LastProjectPath: "C:\\Users\\rafin\\Documents\\GitKraken\\Dungeon-s-Scape\\Dungeon
     Scape Vers\xF5es\\Dungeon Scape 0.1"
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 143}
-    m_SelectedIDs: b24a0000
-    m_LastClickedID: 19122
-    m_ExpandedIDs: 00000000522f0000e6370000fa37000028380000763800007c380000ca380000ce380000e43800006e390000e2390000f4390000483a00000a4200000c4200000e420000e6470000e8480000a6490000b4490000124a00009a4a0000fc4a0000044b00000a23010066230100c649010006b9010082bf010000ca9a3b
+    scrollPos: {x: 0, y: 203}
+    m_SelectedIDs: 6e0a0000
+    m_LastClickedID: 2670
+    m_ExpandedIDs: 00000000560900006e0a0000020b00002e0c00009e0c00004c0f00005c0f0000ca110000e01100000c120000aa12000064130000a21500006e1600006e180000a21800003c1a0000941a0000881b00001c1e000084220000464b0000484b00004a4b00004c4b00004e4b0000504b0000524b0000544b000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -365,7 +365,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000522f0000e6370000fa37000028380000763800007c380000ca380000e43800006e390000e2390000f4390000983a00000a4200000c4200000e420000
+    m_ExpandedIDs: 00000000560900006e0a0000020b00002e0c00009e0c00004c0f00005c0f0000ca110000e01100000c120000aa12000064130000a21500006e1600006e180000a21800003c1a0000941a0000881b00001c1e000084220000464b0000484b00004a4b00004c4b00004e4b0000504b0000524b0000544b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -392,7 +392,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -480,10 +480,10 @@ MonoBehaviour:
     height: 475
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
-    scrollPos: {x: 0, y: 998}
-    m_SelectedIDs: d83ce8ff
-    m_LastClickedID: -1557288
-    m_ExpandedIDs: 7aa9f1ff90e9ffff00000000243b0000aa3b0000fe3b00002e3d00008a3d0000504100002a520100b0520100e6520100fa520100045301003454010090540100145601000658010072580100
+    scrollPos: {x: 0, y: 694}
+    m_SelectedIDs: 34280000
+    m_LastClickedID: 10292
+    m_ExpandedIDs: e4fbffff00000000a0230000c0290000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -537,9 +537,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 39.65763, y: -20.635977, z: 0.0859375}
+    m_Target: {x: 21.421516, y: -156.42195, z: 0.34375}
     speed: 2
-    m_Value: {x: 39.65763, y: -20.635977, z: 0.0859375}
+    m_Value: {x: 21.421516, y: -156.42195, z: 0.34375}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -563,17 +563,17 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
     zGrid:
-      m_Target: 0
+      m_Target: 1
       speed: 2
-      m_Value: 0
+      m_Value: 1
   m_Rotation:
     m_Target: {x: 0, y: 0, z: 0, w: 1}
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 44.1204
+    m_Target: 29.329836
     speed: 2
-    m_Value: 44.1204
+    m_Value: 29.329836
   m_Ortho:
     m_Target: 1
     speed: 2

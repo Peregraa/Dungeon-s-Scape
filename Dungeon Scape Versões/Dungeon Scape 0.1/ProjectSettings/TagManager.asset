@@ -8,6 +8,7 @@ TagManager:
   - checkpoint
   - Inimigo
   - Bloco
+  - Bloco_cenario
   layers:
   - Default
   - TransparentFX

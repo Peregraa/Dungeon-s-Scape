@@ -9,6 +9,11 @@ TagManager:
   - Inimigo
   - Bloco
   - Bloco_cenario
+<<<<<<< HEAD
+  - Limite
+  - Princesa
+=======
+>>>>>>> master
   layers:
   - Default
   - TransparentFX

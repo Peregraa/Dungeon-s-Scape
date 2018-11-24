@@ -1,223 +1,275 @@
-﻿using System.Collections; 
-using System.Collections.Generic; 
-using UnityEngine; 
-using UnityEngine.UI; 
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
-public class Player:MonoBehaviour {
+public class Player : MonoBehaviour
+{
+    bool keysDisabled = false;
+    //Interface
+    public Text TextLives;
+    //vida
+    public int vida = 3;
+    //Checkpoint
+    public GameObject lastCheckPoint;
+    public int contadorColisaoInimigo = 0;
+    bool vivo = true;
+
+    //Personagem - Herói
     
-    //Var para realizar validação do pulo 
-    bool isJumping = false; 
-    bool isOnFloor = false; 
-    private int maxJump; 
-    bool keysDisabled = false; 
+    public float velocidade = 5f;
+    Rigidbody2D corpo;
+    //Var para trabalhar o FLIP
+    SpriteRenderer sprite;
+
+    //Var para validar o chão e a força do pulo
+    public Transform groundCheck;
+    bool isOnFloor = false;
+    public LayerMask whatIsGround;
+    public float puloForca = 600f;
+
+    //Var Pulo
+    bool estaPulo = false;
+    private int maxPulo;
 
     //Agachar
-    bool duck = false; 
+    bool abaixar = false;
 
-    //Interface
-    public Text TextLives; 
+    //Var para validar chão
+    public float radius = 0.35f;
+    
+    //Var de ataque
+    public Transform attackCheck;
+    public float radiusAttack;
+    public LayerMask layerEnemy;
+    float timeNextAttack;
 
-   
-    //vida
-    public int vida = 3; 
-    //Checkpoint
-    public GameObject lastCheckPoint; 
-
-    [Header("Movement Variables")]
-    //Var para velocidade do herói e força do pulo
-    public float jumpForce = 550f; 
-    public float speed = 5f; 
-    public float radius = 0.35f; 
-    //Var validando o chão
-    public Transform groundCheck; 
-    public LayerMask whatIsGround; 
-
-    [Header("Attack Variables")]
-    public Transform attackCheck; 
-    public float radiusAttack; 
-    public LayerMask layerEnemy; 
-    float timeNextAttack; 
-
-    Rigidbody2D body; 
-    SpriteRenderer sprite; 
-    Animator anime; 
+    //Var animação
+    Animator animacao;
 
     // Use this for initialization
-    void Start() {
-        body = GetComponent < Rigidbody2D > (); 
-        sprite = GetComponent < SpriteRenderer > (); 
-        anime = GetComponent < Animator > (); 
-        TextLives.text = vida.ToString(); 
+    void Start()
+    {
+        corpo = GetComponent<Rigidbody2D>();
+        sprite = GetComponent<SpriteRenderer>();
+        animacao = GetComponent<Animator>();
+
+        TextLives.text = vida.ToString();
     }
 
     // Update is called once per frame
-    void Update() {
-        //Verifica se o herói está no chão
-        isOnFloor = Physics2D.OverlapCircle(groundCheck.position, radius, whatIsGround); 
-        
-        if (keysDisabled == false) {
+    void Update()
+    {
+        //Iniciando animações
+        AnimacaoHeroi();
+       
+        //Validando toque no chão
+        isOnFloor = Physics2D.OverlapCircle(groundCheck.position, radius, whatIsGround);
+        animacao.SetBool("CuDoAndre", isOnFloor);
 
-            //Validando pulo e duplo pulo
-            //if (Input.GetButtonDown("Jump") && maxJump > 0) 
-            if (Input.GetKeyDown(KeyCode.UpArrow) && maxJump > 0 && duck == false)
-                isJumping = true; 
-        
-
-            //Herói toca no chão e ganha pulo - EVITA que o HEROI voe
-            if (isOnFloor) {
-                maxJump = 1; 
+        if (keysDisabled == false)
+        {
+            //Validando Pulo e duplo pulo
+            if (Input.GetKeyDown(KeyCode.UpArrow) && maxPulo > 0 && abaixar == false)
+            {
+                estaPulo = true;
             }
 
+            //Evitando que o Herói voe
+            if (isOnFloor)
+            {
+                maxPulo = 1;
+            }
 
-            //Attack do personagem - validando quando atacar
-            if (timeNextAttack <= 0f && duck == false) {
-
-                
-                //if (Input.GetButtonDown("Fire1") && body.velocity == new Vector2(0, 0))
-                if (Input.GetKey(KeyCode.Space) && body.velocity == new Vector2(0, 0)) {
-                    anime.SetTrigger("Attack"); 
-                    timeNextAttack = 0.2f; 
+            //Criando ação de ataque e tempo de ataque
+            if (timeNextAttack <= 0f && abaixar == false)
+            {
+                if (Input.GetKey(KeyCode.Space) && corpo.velocity == new Vector2(0, 0))
+                {
+                    animacao.SetTrigger("Attack");
+                    timeNextAttack = 0.2f;
                 }
             }
-            else {
-                timeNextAttack -= Time.deltaTime; 
+            else
+            {
+                timeNextAttack -= Time.deltaTime;
             }
 
 
-            //Correr
-            if (Input.GetKey(KeyCode.LeftShift) && speed < 7) {
-                speed += 0.1f; 
-            }else if ( ! Input.GetKey(KeyCode.LeftShift) && speed > 5) {
-                speed -= 0.1f; 
+            //Correr gradativamente e dimuir corrida gradativamente
+            if (Input.GetKey(KeyCode.LeftShift) && velocidade < 7)
+            {
+                velocidade += 0.1f;
+            }
+            else if (!Input.GetKey(KeyCode.LeftShift) && velocidade > 5)
+            {
+                velocidade -= 0.1f;
             }
 
         }
-        //Carregando a animação ao iniciar o jogo
-        PlayerAnimation(); 
-
+   
     }
 
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
 
-        if (keysDisabled == false) {
-        
-            //MOVE - recebe quando as teclas <- -> são pressionadas
-            float move = Input.GetAxis("Horizontal"); 
-
-
-            //Impedindo que o Herói anda agaichado
-            if (duck == false) {
+        if (keysDisabled == false)
+        {
+            //Movimento do Herói + velocidade do movimento
+            float movimento = Input.GetAxis("Horizontal");
+           
+            //Impedindo que o Herói ande agachado
+            if (abaixar == false)
+            {
                 //Velocidade e movimento do herói tanto no ar quanto no solo 
-                body.velocity = new Vector2(move * speed, body.velocity.y); 
+                corpo.velocity = new Vector2(movimento * velocidade, corpo.velocity.y);
             }
 
-            if ((move > 0 && sprite.flipX == true) || (move < 0 && sprite.flipX == false)) {
-                Flip(); 
+            if ((movimento > 0 && sprite.flipX == true) || (movimento < 0 && sprite.flipX == false))
+            {
+                Flip();
             }
 
-            //Ação de pulo
-            if (isJumping) {
-                maxJump--; 
-                body.velocity = new Vector2(body.velocity.x, 0f); 
-                body.AddForce(new Vector2(0f, jumpForce)); 
-                isJumping = false; 
+            //Ação de pular
+            if (estaPulo)
+            {
+                maxPulo--;
+                corpo.velocity = new Vector2(corpo.velocity.x, 0f);
+                corpo.AddForce(new Vector2(0f, puloForca));
+                estaPulo = false;
             }
 
-            //Fazendo personagem abaixar
-        
-            if (Input.GetAxis("Vertical") < 0) {
-                duck = true; 
+            //Fazendo personagem agachar
+            if (corpo.velocity.x > 0 || Input.GetKeyDown(KeyCode.DownArrow) == false || corpo.velocity.y > 0)
+            {
+                abaixar = false;
             }
-            else {
-                duck = false; 
+
+            else
+            {
+                abaixar = true;
             }
-            anime.SetBool("Duck", duck); 
+
+            animacao.SetBool("Duck", abaixar);
         }
     }
 
-    void Flip() {
-        sprite.flipX =  ! sprite.flipX; 
-        //Direcionando o lado do ataque com a espada.
-        attackCheck.position = new Vector2( - attackCheck.localPosition.x, attackCheck.localPosition.y); 
+    void Flip()
+    {
+        //Direção que o Herói olha
+        sprite.flipX = !sprite.flipX;
+
+        //Direção que o Herói ataca.
+        attackCheck.position = new Vector2(-attackCheck.localPosition.x, attackCheck.localPosition.y);
+     
     }
 
-    void PlayerAttack() {
+    void PlayerAttack()
+    {
         //Atacar mais de um inimigo
-        Collider2D[] enemiesAttack = Physics2D.OverlapCircleAll(attackCheck.position, radiusAttack, layerEnemy); 
-        for (int i = 0; i < enemiesAttack.Length; i++) {
-            enemiesAttack[i].SendMessage("EnemyHit"); 
-            Debug.Log(enemiesAttack[i].name); 
+        Collider2D[] enemiesAttack = Physics2D.OverlapCircleAll(attackCheck.position, radiusAttack, layerEnemy);
+        for (int i = 0; i < enemiesAttack.Length; i++)
+        {
+            enemiesAttack[i].SendMessage("EnemyHit");
+            Debug.Log(enemiesAttack[i].name);
         }
     }
-
 
     //Aumentando o alcance do groundCheck para evitar erros no pulo.
-    void OnDrawGizmosSelected() {
-        Gizmos.color = Color.red; 
-        Gizmos.DrawWireSphere(groundCheck.position, radius); 
-        Gizmos.DrawWireSphere(attackCheck.position, radiusAttack); 
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(groundCheck.position, radius);
+        Gizmos.DrawWireSphere(attackCheck.position, radiusAttack);
     }
 
     //Validando animação do herói
-    void PlayerAnimation() {
-        anime.SetFloat("VelX", Mathf.Abs (body.velocity.x)); 
-        anime.SetFloat("VelY", Mathf.Abs (body.velocity.y)); 
+    void AnimacaoHeroi()
+    {
+        //Verificando velocidade do eixo X e Y
+        animacao.SetFloat("VelX", Mathf.Abs(corpo.velocity.x));
+        animacao.SetFloat("VelY", Mathf.Abs(corpo.velocity.y));
     }
-
-
-
-
-
+    
     //Fazendo morte e checkpoint do personagem
-    void OnCollisionEnter2D(Collision2D collision2d) {
-        if (collision2d.gameObject.CompareTag("Espeto")) {
-            if (vida >= 0) {
-            vida--; 
+    void OnCollisionEnter2D(Collision2D collision2d)
+    {
+        if (collision2d.gameObject.CompareTag("Espeto"))
+        {
+            if (vida >= 0)
+            {
+                vida--;
             }
-            anime.SetTrigger("Morreu"); 
-            if(vida >=0){
-                TextLives.text = vida.ToString(); 
+            animacao.SetTrigger("Morreu");           
+
+            if (vida >= 0)
+            {
+                TextLives.text = vida.ToString();
             }
+
             keysDisabled = true;
 
 
+            if (vida == 0)
+            {
+                //GameOver
+            }
+        }
+        
+        if (collision2d.gameObject.CompareTag("Inimigo"))
+        {
+
+            
+
+
+            if(vivo){
+                
+                contadorColisaoInimigo++;
+                if(contadorColisaoInimigo == 3){
+                    vivo = false;                     
+
+                    if (vida >= 0) {
+                        vida--; 
+                    }
+                    animacao.SetTrigger("Morreu"); 
+                    if(vida >=0){
+                        TextLives.text = vida.ToString(); 
+                    }
+
+                    keysDisabled = true;
+                    contadorColisaoInimigo = 0;
+                }
+            
+            }
+            
+
+            
             if (vida == 0) {
                 //GameOver
             }
         }
 
-          //Quando criar os inimigos, colocar a tag "Inimigo" neles.
-        //if (collision2d.gameObject.CompareTag("Inimigo")) {
-          //  vida--; 
-            //anime.SetTrigger("Morreu"); 
-
-
-            
-       //     if (vida == 0) {
-                //GameOver
-         //   }
-      //  }
-
     }
 
-        public void moverCheckPoint() {
-                             
-            if(vida>=0){   
-                keysDisabled = false;
-                anime.SetTrigger("Renasce");
-                transform.position = lastCheckPoint.transform.position;                 
-            }
+    public void moverCheckPoint()
+    {
+        if (vida >= 0)
+        {
+            keysDisabled = false;
+            animacao.SetTrigger("Renasce");
+            transform.position = lastCheckPoint.transform.position;
+            vivo = true;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision2d)
+    {
+        // Fazendo Checkpoint
+        if (collision2d.gameObject.CompareTag("checkpoint"))
+        {
+            lastCheckPoint = collision2d.gameObject;
         }
 
-        void OnTriggerEnter2D(Collider2D collision2d) {
-        // Fazendo Checkpoint
-        if (collision2d.gameObject.CompareTag("checkpoint")) {
-            
-                 
-                lastCheckPoint = collision2d.gameObject;
-                
-        }
-        
     }
 
 }
